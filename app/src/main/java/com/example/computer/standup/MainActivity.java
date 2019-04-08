@@ -26,13 +26,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        ToggleButton alarmButton = findViewById(R.id.alarmToggle);
 
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
+
+        // The flag determines what happens if a PendingIntent whose intent matches the
+        // intent you are trying to create already exists. The NO_CREATE flag returns null
+        // unless a PendingIntent with a matching Intent exists.
+        boolean alarmUp = (PendingIntent.getBroadcast(this, NOTIFICATION_ID,
+                notifyIntent, PendingIntent.FLAG_NO_CREATE) != null);
+        alarmButton.setChecked(alarmUp);
+
         final PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(this,
                 NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        ToggleButton alarmButton = findViewById(R.id.alarmToggle);
+        final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         alarmButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -47,23 +57,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                     toastMessage = getString(R.string.alarm_on_toast_message);
                 } else {
+                    // Cancel notification if the alarm is turned off
+                    mNotificationManager.cancelAll();
+
                     if (alarmManager != null) {
                         alarmManager.cancel(notifyPendingIntent);
                     }
-                    // Cancel notification if the alarm is turned off
-                    mNotificationManager.cancelAll();
                     toastMessage = getString(R.string.alarm_off_toast_message);
                 }
                 Toast.makeText(MainActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
             }
         });
-
-        // The flag determines what happens if a PendingIntent whose intent matches the
-        // intent you are trying to create already exists. The NO_CREATE flag returns null
-        // unless a PendingIntent with a matching Intent exists.
-        boolean alarmUp = (PendingIntent.getBroadcast(this, NOTIFICATION_ID,
-                notifyIntent, PendingIntent.FLAG_NO_CREATE) != null);
-        alarmButton.setChecked(alarmUp);
 
         createNotificationChannel();
     }

@@ -32,6 +32,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
+
+        // Deliver the notification
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 }
