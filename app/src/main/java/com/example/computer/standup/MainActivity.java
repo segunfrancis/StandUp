@@ -58,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // The flag determines what happens if a PendingIntent whose intent matches the
+        // intent you are trying to create already exists. The NO_CREATE flag returns null
+        // unless a PendingIntent with a matching Intent exists.
+        boolean alarmUp = (PendingIntent.getBroadcast(this, NOTIFICATION_ID,
+                notifyIntent, PendingIntent.FLAG_NO_CREATE) != null);
+        alarmButton.setChecked(alarmUp);
+
         createNotificationChannel();
     }
 
