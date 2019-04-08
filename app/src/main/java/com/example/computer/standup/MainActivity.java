@@ -10,9 +10,14 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         ToggleButton alarmButton = findViewById(R.id.alarmToggle);
+        final Button nextAlarmButton = findViewById(R.id.next_alarm);
 
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
 
@@ -68,6 +74,23 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
+        /*nextAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    if (alarmManager != null) {
+                        AlarmManager.AlarmClockInfo clockInfo = alarmManager.getNextAlarmClock();
+                        long nextAlarmTime = clockInfo.getTriggerTime();
+                        SimpleDateFormat df = new SimpleDateFormat();
+                        String properTime = df.format(nextAlarmTime);
+                        Toast.makeText(MainActivity.this, properTime, Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(MainActivity.this, "No Alarm Set!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });*/
 
         createNotificationChannel();
     }
